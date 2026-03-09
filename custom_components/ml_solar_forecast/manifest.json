@@ -11,7 +11,6 @@
         "github.com/b3nn0"
     ],
     "requirements": [
-        "homeassistant >= 2026.1",
         "pandas==3.0.1"
     ],
     "dependencies": [
