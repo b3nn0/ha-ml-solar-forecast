@@ -56,10 +56,10 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         # force retrain initially
         self.last_train_time: datetime = datetime.now(UTC) - timedelta(days=1)
 
-        self.curr_forecast: dict[str, dict[str, float | int]] | None = None
+        self.curr_forecast: pd.DataFrame | None = None
         self.update_lock = asyncio.Lock()
 
-    async def get_current_forecast(self) -> dict[str, dict[str, float | int]] | None:
+    async def get_current_forecast(self) -> pd.DataFrame | None:
         """Get the current forecast data.
 
         If no forecast data is currently available, update the forecast data first.
@@ -69,7 +69,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             await self._async_update_data()
         return self.curr_forecast
 
-    async def _async_update_data(self) -> dict[str, dict[str, float | int]] | None:
+    async def _async_update_data(self) -> pd.DataFrame | None:
         """Update data."""
         log.debug("updating forecast for %s", self.key)
 
@@ -95,23 +95,9 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             data = await self._prepare_dataframe(fcstart, end, False)
 
             log.debug(f"{self.key}: computing forecast...")
-            prediction = await self.lgbm.predict(data, "power")
-            log.debug(f"{self.key}: converting forecast to HA format")
-
-            power = (
-                prediction["power"]
-                .clip(lower=0)
-                .apply(lambda p: 0 if p < 15 else p)
-                .to_dict()
-            )
-            result = {}
-            for key, value in power.items():
-                # we need Wh at 15 minute resolution, model delivered watts
-                result[key.isoformat()] = value / 4.0
+            self.curr_forecast = await self.lgbm.predict(data, "power")
 
             log.debug(f"{self.key}: forecast update done")
-
-        self.curr_forecast = {"wh_hours": result}
 
         return self.curr_forecast
 

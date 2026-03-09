@@ -18,4 +18,14 @@ async def async_get_solar_forecast(
 
     assert isinstance(coordinator, MLSolarForecastCoordinator)
 
-    return await coordinator.get_current_forecast()
+    prediction = await coordinator.get_current_forecast()
+    power = (
+        prediction["power"].clip(lower=0).apply(lambda p: 0 if p < 15 else p).to_dict()
+    )
+
+    result = {}
+    for key, value in power.items():
+        # we need Wh at 15 minute resolution, model delivered watts
+        result[key.isoformat()] = value / 4.0
+
+    return {"wh_hours": result}
