@@ -16,11 +16,14 @@ jobs:
         run: |
           cd ${{ github.workspace }}/custom_components/ml_solar_forecast
           zip ml_solar_forecast.zip -r ./
-      - name: Upload zip to release
-        uses: svenstaro/upload-release-action@v1-release
+
+      - name: Upload the zip file as a release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/custom_components/ml_solar_forecast/ml_solar_forecast.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: "${{ github.workspace }}/custom_components/ml_solar_forecast/ml_solar_forecast.zip"
           asset_name: ml_solar_forecast.zip
-          tag: ${{ github.ref }}
-          overwrite: true
+          asset_content_type: application/zip
+
