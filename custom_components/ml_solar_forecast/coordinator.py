@@ -87,7 +87,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             # for actual forecasting, start from beginning of today
             today = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
             end = today + timedelta(days=14)
-            fcstart = today - timedelta(days=13)
+            fcstart = today - timedelta(days=60)
 
             log.debug(f"{self.key}: refreshing weather data {today} -> {end}")
             await self.weatherstore.refresh_range(today, end)

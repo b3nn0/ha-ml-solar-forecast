@@ -1,7 +1,7 @@
 {
     "domain": "ml_solar_forecast",
     "name": "Machine Learning Solar Forecast",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A custom integration for solar forecasting using machine learning on your own historical data.",
     "documentation": "https://github.com/b3nn0/ha-ml-solar-forecast",
     "issue_tracker": "https://github.com/b3nn0/ha-ml-solar-forecast/issues",
