@@ -1,8 +1,9 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*"
 
 jobs:
   release_zip_file:
@@ -16,6 +17,18 @@ jobs:
         run: |
           cd ${{ github.workspace }}/custom_components/ml_solar_forecast
           zip ml_solar_forecast.zip -r ./
+
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
       - name: Upload the zip file as a release asset
         uses: actions/upload-release-asset@v1
