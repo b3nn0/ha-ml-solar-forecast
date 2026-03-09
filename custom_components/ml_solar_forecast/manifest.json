@@ -13,8 +13,7 @@
     ],
     "requirements": [
         "homeassistant >= 2026.1",
-        "astral",
-        "pandas"
+        "pandas==3.0.1"
     ],
     "dependencies": [
         "energy",
