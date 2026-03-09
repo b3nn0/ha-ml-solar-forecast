@@ -19,6 +19,8 @@ from .const import (
 )
 from .coordinator import MLSolarForecastCoordinator
 
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
 SERVICE_SCHEMA_GET_FORECAST = vol.Schema(
     {
         vol.Required("entry_id"): cv.string,

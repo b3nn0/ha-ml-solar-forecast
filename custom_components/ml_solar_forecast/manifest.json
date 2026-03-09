@@ -1,20 +1,20 @@
 {
     "domain": "ml_solar_forecast",
     "name": "Machine Learning Solar Forecast",
-    "version": "0.0.0.dev0",
-    "documentation": "https://github.com/b3nn0/ha-ml-solar-forecast",
-    "issue_tracker": "https://github.com/b3nn0/ha-ml-solar-forecast/issues",
-    "config_flow": true,
-    "integration_type": "service",
-    "iot_class": "cloud_polling",
     "codeowners": [
-        "github.com/b3nn0"
+        "@b3nn0"
     ],
-    "requirements": [
-        "pandas==3.0.1"
-    ],
+    "config_flow": true,
     "dependencies": [
         "energy",
         "recorder"
-    ]
+    ],
+    "documentation": "https://github.com/b3nn0/ha-ml-solar-forecast",
+    "integration_type": "service",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/b3nn0/ha-ml-solar-forecast/issues",
+    "requirements": [
+        "pandas==3.0.1"
+    ],
+    "version": "0.0.0.dev0"
 }
