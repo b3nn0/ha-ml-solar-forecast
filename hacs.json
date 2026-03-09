@@ -1,0 +1,11 @@
+{
+    "name": "ML Solar Forecast",
+    "homeassistant": "2026.3.0",
+    "domains": [
+        "energy"
+    ],
+    "iot_class": "Cloud Polling",
+    "render_readme": true,
+    "zip_release": true,
+    "filename": "ml_solar_forecast.zip"
+}
