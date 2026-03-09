@@ -44,6 +44,11 @@ Once [this](https://github.com/home-assistant/wheels-custom-integrations/pull/74
 Add the integration via **Settings > Devices & Services > Add Integration** and follow the prompts.
 
 
+## TODO
+- Get LightGBM approved to HA wheels and change integration to use that instead
+- Add helpful sensors and service to get current forecast
+
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please open an **issue** or **pull request** for:
@@ -56,5 +61,4 @@ Contributions are welcome! Please open an **issue** or **pull request** for:
 
 ## 📜 License
 This project is licensed under **MIT**.
-
 
