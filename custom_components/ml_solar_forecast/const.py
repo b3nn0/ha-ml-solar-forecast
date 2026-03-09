@@ -5,7 +5,7 @@ import logging
 # Constants for the integration
 DOMAIN = "ml_solar_forecast"
 NAME = "Machine Learning Solar Forecast"
-VERSION = "0.0.1"
+VERSION = "0.0.0.dev0"
 
 
 SERVICE_NAME_GET_FORECAST = "get_forecast"

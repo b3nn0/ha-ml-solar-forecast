@@ -1,12 +1,13 @@
 """The HA-ML Solar Forecast integration."""
 
+from datetime import UTC, datetime, timedelta
+
 import voluptuous as vol
-from datetime import datetime, UTC, timedelta
+
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_CONFIG_ENTRY_ID, Platform
-from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse, callback
+from homeassistant.const import Platform
+from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
 from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.selector import DateTimeSelector
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
