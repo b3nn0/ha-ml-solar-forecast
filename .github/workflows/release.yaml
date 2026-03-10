@@ -29,22 +29,12 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-
-      - name: Upload the zip file as a release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "${{ github.workspace }}/custom_components/ml_solar_forecast/ml_solar_forecast.zip"
-          asset_name: ml_solar_forecast.zip
-          asset_content_type: application/zip
+          fail_on_unmatched_files: true
+          files: ${{ github.workspace }}/custom_components/ml_solar_forecast/ml_solar_forecast.zip
 
