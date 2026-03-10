@@ -5,6 +5,7 @@ This approach works especially well if you
 - have a very complex setup with different orientations and tilt
 - have a dynamic setup with trackers
 - have complex time dependent shading on your panels
+- have a weather service with systematic errors for your location (e.g. if it just won't get the fog in the mornings right)
 
 For simple installations, there is no major benefit over classic forecasting solutions - but also no real downside, except occasionally slightly higher CPU usage.
 
@@ -51,7 +52,7 @@ Add the integration via **Settings > Devices & Services > Add Integration** and 
 
 
 ## TODO
-- Get LightGBM approved to HA wheels and change integration to use that instead
+- Get LightGBM approved to HA wheels and change integration to use that instead ([#748](https://github.com/home-assistant/wheels-custom-integrations/pull/748))
 - Add helpful sensors and service to get current forecast
 
 
@@ -63,6 +64,9 @@ Contributions are welcome! Please open an **issue** or **pull request** for:
 - Documentation improvements
 - Performance optimizations
 
+### 🙌 Inspiration & Acknowledgments
+
+This project was inspired by the excellent work of **[OpenMeteoSolarForecast](https://github.com/rany2/ha-open-meteo-solar-forecast)**, which provides a robust foundation for solar forecasting in Home Assistant.
 
 
 ## 📜 License
