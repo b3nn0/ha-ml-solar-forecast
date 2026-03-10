@@ -1,6 +1,12 @@
 # 🌞 ML Solar Forecast Integration
 
 A **machine learning-powered solar forecast** integration for Home Assistant, designed to predict solar panel output with high accuracy using [weather data by Open-Meteo.com](https://open-meteo.com/) and your historic solar output.
+This approach works especially well if you
+- have a very complex setup with different orientations and tilt
+- have a dynamic setup with trackers
+- have complex time dependent shading on your panels
+
+For simple installations, there is no major benefit over classic forecasting solutions - but also no real downside, except occasionally slightly higher CPU usage.
 
 ## 📌 Overview
 
