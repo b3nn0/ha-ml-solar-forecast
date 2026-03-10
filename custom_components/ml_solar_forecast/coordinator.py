@@ -160,36 +160,6 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
 
         df = pd.DataFrame()
 
-        # is_15min = self.config.data[CONF_RESOLUTION_15M]
-        # TODO: do we really want to learn from 5 minute intervals? Or only use the 15 minutes for actual prediction?
-        # if is_15min:
-        #    # First, fetch 5 minute statistics
-        #    stats = await recorder_instance.async_add_executor_job(
-        #        statistics_during_period,
-        #        self.hass,
-        #        start_time,
-        #        end_time,
-        #        statistic_id,
-        #        "5minute",
-        #        units,
-        #        types,
-        #    )
-        #    if stats is not None and len(stats) > 0:
-        #        df["time"] = [
-        #            pd.Timestamp(r["start"], tz=UTC, unit="s")
-        #            for r in stats[entity_id]
-        #        ]
-        #        df["power"] = [r["sum"] for r in stats[entity_id]]
-        #        df = df.set_index("time")
-        #        df["power"] = (
-        #            df["power"].diff().shift(-1).resample("15min").sum().dropna()
-        #        )
-
-        #        # adjust end time to only fetch hourly data before
-        #        end_time = datetime.fromtimestamp(
-        #            stats[entity_id][0]["start"], UTC
-        #        )
-
         if end_time > start_time:
             # Fetch remaining required time from hourly data and spline it
             stats = await recorder_instance.async_add_executor_job(
@@ -202,22 +172,21 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
                 units,
                 types,
             )
-            df2 = pd.DataFrame()
-            df2["time"] = [
+            df = pd.DataFrame()
+            df["time"] = [
                 pd.Timestamp(r["start"], tz=UTC, unit="s") for r in stats[entity_id]
             ]
-            df2["power"] = [r["sum"] for r in stats[entity_id]]
-            df2 = df2.set_index("time")
-            df2["power"] = df2["power"].diff()
+            df["power"] = [r["sum"] for r in stats[entity_id]]
+            df = df.set_index("time")
+            df["power"] = df["power"].diff()
+
             # For now, learning only runs on hourly aggregates instead of 15 minute intervals.
             # Since for one hour, 1W=1Wh, we just interpret our learning data as "watts" instead of "watt-hours".
             # -> the model predicts watts, we just divide by 4 in the forecast if needed
-            # if is_15min:
-            #    df2 = df2.shift(30, "min").resample("15min").interpolate("cubic") / 4.0
-            if len(df) == 0:
-                df = df2
-            else:
-                df = df.combine_first(df2)
+
+            df = await asyncio.to_thread(
+                lambda: df.shift(30, "min").resample("15min").interpolate("cubic")
+            )
 
         df["power"] = df["power"].clip(lower=0).apply(lambda p: 0 if p < 15 else p)
         return df.dropna()
