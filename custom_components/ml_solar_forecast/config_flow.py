@@ -13,7 +13,13 @@ from homeassistant.helpers.selector import (
     NumberSelector,
 )
 
-from .const import CONF_LOCATION, CONF_PRODUCTION_ENTITY, CONF_TRAINING_DAYS, DOMAIN
+from .const import (
+    CONF_LOCATION,
+    CONF_MAX_INVERTER_POWER_W,
+    CONF_PRODUCTION_ENTITY,
+    CONF_TRAINING_DAYS,
+    DOMAIN,
+)
 
 
 class MLSolarForecastConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -51,6 +57,7 @@ class MLSolarForecastConfigFlow(ConfigFlow, domain=DOMAIN):
                             ),
                         )
                     ),
+                    vol.Optional(CONF_MAX_INVERTER_POWER_W): NumberSelector({}),
                     vol.Required(
                         CONF_TRAINING_DAYS,
                         default=180,

@@ -8,13 +8,11 @@
                     "location": "Location of the solar installation",
                     "production_entity": "Solar production entity",
                     "training_days": "Training days",
-                    "resolution_15m": "15 minute resolution",
-                    "openmeteo_api_key": "OpenMeteo API Key"
+                    "max_inverter_power_w": "Max. inverter power"
                 },
                 "data_description": {
-                    "training_days": "The longer the better. Starting with 30 days, you get usable results. Above 180, improvements will be minor, above 365 more or less nonexistant. If you do significant changes to your solar installation, make sure you set this short enough to not mix trainign data.",
-                    "resolution_15m": "Not needed for energy dashboard display, but might be useful if you require a higher resolution forecast for automations, scripts, ...",
-                    "openmeteo_api_key": "Optional, usually not needed"
+                    "training_days": "The longer the better. Starting with 30 days, you get usable results. Above 180, improvements will be minor, above 365 more or less nonexistant. If you do significant changes to your solar installation, make sure you set this short enough to not mix training data.",
+                    "max_inverter_power_w": "Used to clip prediction output and filter invalid training data."
                 }
             }
         }

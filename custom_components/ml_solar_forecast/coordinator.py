@@ -11,6 +11,7 @@ import asyncio
 from datetime import UTC, datetime, timedelta
 
 from astral import Observer, sun
+import numpy as np
 import pandas as pd
 
 from homeassistant.components.recorder.statistics import statistics_during_period
@@ -21,6 +22,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import (
     CONF_LOCATION,
+    CONF_MAX_INVERTER_POWER_W,
     CONF_PRODUCTION_ENTITY,
     CONF_TRAINING_DAYS,
     DOMAIN,
@@ -147,18 +149,25 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             data = pd.concat([data, power], axis=1)
             data = self.data_laundry(data)
 
-        return data
+        return data.dropna()
 
     def data_laundry(self, df: pd.DataFrame):
         """Cleans up data to matchs some basic assumptions.
 
         - Remove negative power
         - ensure power is 0 at night
-        - TODO: remove power > inverter output.
+        - remove power > inverter output.
         """
+
         df["power"] = df["power"].clip(lower=0)
+
+        max_power = self.config.data.get(CONF_MAX_INVERTER_POWER_W)
+        if max_power is not None:
+            df.loc[df["power"] > max_power] = np.nan
+
         if "elevation" in df.columns:
             df.loc[df["elevation"] <= 0, "power"] = 0
+
         return df
 
     async def _collect_solar_history(
