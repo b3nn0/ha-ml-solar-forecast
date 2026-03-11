@@ -48,7 +48,13 @@ Once [this](https://github.com/home-assistant/wheels-custom-integrations/pull/74
 ## 📊 Configuration
 
 ### **Basic Setup**
-Add the integration via **Settings > Devices & Services > Add Integration** and follow the prompts.
+- Add the integration via **Settings > Devices & Services > Add Integration** and follow the prompts.
+- Go to the energy dashboard and edit it via the button in the top right
+- Find your solar generation and add the ML Solar Forecast as a forecast
+
+### **Other use cases**
+- This integration adds a new service action `ml_solar_forecast.get_forecast` that gives access to the raw data for use in templates or scripts (timestamp -> Watts with 15 minute resolution).
+
 
 
 ## TODO
