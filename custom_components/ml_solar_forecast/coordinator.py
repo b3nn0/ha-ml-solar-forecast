@@ -95,8 +95,12 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             data = await self._prepare_dataframe(fcstart, end, False)
 
             log.debug(f"{self.key}: computing forecast...")
-            self.curr_forecast = await self.lgbm.predict(data, "power")
+            forecast = await self.lgbm.predict(data, "power")
+            # re-join original data so we have elevation levels to launder data
+            forecast = pd.concat([data, forecast], axis=1)
+            forecast = self.data_laundry(forecast)
 
+            self.curr_forecast = forecast[["power"]]
             log.debug(f"{self.key}: forecast update done")
 
         return self.curr_forecast
@@ -141,7 +145,21 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         if with_power:
             power = await self._collect_solar_history(start_time, end_time)
             data = pd.concat([data, power], axis=1)
+            data = self.data_laundry(data)
+
         return data
+
+    def data_laundry(self, df: pd.DataFrame):
+        """Cleans up data to matchs some basic assumptions.
+
+        - Remove negative power
+        - ensure power is 0 at night
+        - TODO: remove power > inverter output.
+        """
+        df["power"] = df["power"].clip(lower=0)
+        if "elevation" in df.columns:
+            df.loc[df["elevation"] <= 0, "power"] = 0
+        return df
 
     async def _collect_solar_history(
         self, start_time: datetime, end_time: datetime
