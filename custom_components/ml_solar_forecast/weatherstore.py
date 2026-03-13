@@ -28,7 +28,13 @@ class WeatherStore(DataStore):
     update_lock: asyncio.Lock
 
     def __init__(
-        self, key: str, lat: float, lon: float, storage_dir: str | None = None
+        self,
+        key: str,
+        lat: float,
+        lon: float,
+        storage_dir: str | None = None,
+        openmeteo_api_key: str | None = None,
+        openmeteo_weather_models: str | None = None,
     ) -> None:
         """Initialize the WeatherStore with location and storage settings.
 
@@ -37,11 +43,15 @@ class WeatherStore(DataStore):
             lat: Latitude of the location.
             lon: Longitude of the location.
             storage_dir: Directory to store weather data (optional).
+            openmeteo_api_key: Optional OpenMeteo API key for authenticated requests.
+            openmeteo_weather_models: Optional comma-separated string of OpenMeteo weather model codes (e.g., "en_DE,fr_FR").
         """
         super().__init__(storage_dir, f"weather_{key}_v1")
         self.key = key
         self.lat = lat
         self.lon = lon
+        self.openmeteo_api_key = openmeteo_api_key
+        self.openmeteo_weather_models = openmeteo_weather_models
         self.update_lock = asyncio.Lock()
 
     @override
@@ -57,11 +67,32 @@ class WeatherStore(DataStore):
             else:
                 host = "api.open-meteo.com"
 
-            url = f"https://{host}/v1/forecast?latitude={self.lat}&longitude={self.lon}&azimuth=0&tilt=0&start_date={rstart.date().isoformat()}&end_date={rend.date().isoformat()}&minutely_15=temperature_2m,global_tilted_irradiance,relative_humidity_2m,precipitation,visibility,cloud_cover_low,cloud_cover_mid,cloud_cover_high,snow_depth&timezone=UTC"
+            params = {
+                "latitude": self.lat,
+                "longitude": self.lon,
+                "azimuth": 0,
+                "tilt": 0,
+                "start_date": rstart.date().isoformat(),
+                "end_date": rend.date().isoformat(),
+                "minutely_15": "temperature_2m,global_tilted_irradiance,relative_humidity_2m,precipitation,visibility,cloud_cover_low,cloud_cover_mid,cloud_cover_high,snow_depth",
+                "timezone": "UTC",
+            }
+
+            # Add optional parameters if provided
+            if self.openmeteo_api_key:
+                params["apikey"] = self.openmeteo_api_key
+            if self.openmeteo_weather_models:
+                params["models"] = self.openmeteo_weather_models
+
+            base_url = f"https://{host}/v1/forecast"
+            url = f"{base_url}?{'&'.join(f'{k}={v}' for k, v in params.items())}"
             log.debug("%s: fetching weather data: %s", self.key, url)
 
             try:
-                async with aiohttp.ClientSession() as session, session.get(url) as resp:
+                async with (
+                    aiohttp.ClientSession() as session,
+                    session.get(base_url, params=params) as resp,
+                ):
                     data = await resp.text()
                     fc = json.loads(data)
 

@@ -23,6 +23,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .const import (
     CONF_LOCATION,
     CONF_MAX_INVERTER_POWER_W,
+    CONF_OPENMETEO_API_KEY,
+    CONF_OPENMETEO_WEATHER_MODELS,
     CONF_PRODUCTION_ENTITY,
     CONF_TRAINING_DAYS,
     DOMAIN,
@@ -52,7 +54,12 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         self.lon: float = config.data[CONF_LOCATION]["longitude"]
 
         self.weatherstore = WeatherStore(
-            self.key, self.lat, self.lon, hass.config.path("ml-solar-forecast")
+            self.key,
+            self.lat,
+            self.lon,
+            hass.config.path("ml-solar-forecast"),
+            config.data.get(CONF_OPENMETEO_API_KEY),
+            config.data.get(CONF_OPENMETEO_WEATHER_MODELS),
         )
         self.lgbm = LGBM(f"ml-solar-forecast-{config.data[CONF_PRODUCTION_ENTITY]}")
         # force retrain initially

@@ -11,11 +11,16 @@ from homeassistant.helpers.selector import (
     EntitySelectorConfig,
     LocationSelector,
     NumberSelector,
+    TextSelector,
+    TextSelectorConfig,
+    TextSelectorType,
 )
 
 from .const import (
     CONF_LOCATION,
     CONF_MAX_INVERTER_POWER_W,
+    CONF_OPENMETEO_API_KEY,
+    CONF_OPENMETEO_WEATHER_MODELS,
     CONF_PRODUCTION_ENTITY,
     CONF_TRAINING_DAYS,
     DOMAIN,
@@ -57,11 +62,19 @@ class MLSolarForecastConfigFlow(ConfigFlow, domain=DOMAIN):
                             ),
                         )
                     ),
-                    vol.Optional(CONF_MAX_INVERTER_POWER_W): NumberSelector({}),
                     vol.Required(
                         CONF_TRAINING_DAYS,
                         default=180,
                     ): NumberSelector({}),
+                    vol.Optional(CONF_MAX_INVERTER_POWER_W): NumberSelector({}),
+                    vol.Optional(
+                        CONF_OPENMETEO_API_KEY,
+                        default="",
+                    ): TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD)),
+                    vol.Optional(
+                        CONF_OPENMETEO_WEATHER_MODELS,
+                        default="",
+                    ): TextSelector(TextSelectorConfig(type=TextSelectorType.TEXT)),
                 }
             ),
         )
