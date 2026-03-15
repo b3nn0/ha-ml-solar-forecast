@@ -144,12 +144,8 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
 
         observer = Observer(latitude=self.lat, longitude=self.lon)
 
-        data["azimuth"] = list(
-            data.index.map(lambda t: sun.azimuth(observer, t + timedelta(minutes=7)))
-        )
-        data["elevation"] = list(
-            data.index.map(lambda t: sun.elevation(observer, t + timedelta(minutes=7)))
-        )
+        data["azimuth"] = list(data.index.map(lambda t: sun.azimuth(observer, t)))
+        data["elevation"] = list(data.index.map(lambda t: sun.elevation(observer, t)))
 
         if with_power:
             power = await self._collect_solar_history(start_time, end_time)

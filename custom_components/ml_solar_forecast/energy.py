@@ -19,13 +19,14 @@ async def async_get_solar_forecast(
     assert isinstance(coordinator, MLSolarForecastCoordinator)
 
     prediction = await coordinator.get_current_forecast()
-    power = (
-        prediction["power"].clip(lower=0).apply(lambda p: 0 if p < 15 else p).to_dict()
-    )
+    # weather data is always at the start of each 15 minute slot, but we want the average of each 15 minute slot.
+    # Then convert to energy
+    power = (prediction["power"] + prediction["power"].shift(-1)) / 2
+    energy = (power / 4).to_dict()
 
     result = {}
-    for key, value in power.items():
+    for key, value in energy.items():
         # we need Wh at 15 minute resolution, model delivered watts
-        result[key.isoformat()] = value / 4.0
+        result[key.isoformat()] = value
 
     return {"wh_hours": result}
