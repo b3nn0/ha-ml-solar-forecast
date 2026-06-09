@@ -18,7 +18,7 @@ class LGBM:
     Hopefully obsolete once this is merged: https://github.com/home-assistant/wheels-custom-integrations/pull/748.
     """
 
-    HOSTNAME: str = "http://localhost:14760"
+    HOSTNAME: str = "http://f87c2302-machine-learner:14760"
     # HOSTNAME: str = "http://hass:14760"
 
     modelname: str = ""
