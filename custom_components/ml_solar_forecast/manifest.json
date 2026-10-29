@@ -14,7 +14,8 @@
     "iot_class": "cloud_polling",
     "issue_tracker": "https://github.com/b3nn0/ha-ml-solar-forecast/issues",
     "requirements": [
-        "pandas>=2.0.0"
+        "pandas>=2.0.0",
+        "hessboost[pandas]>=0.4.4"
     ],
-    "version": "0.0.0.dev0"
+    "version": "v0.0.14"
 }

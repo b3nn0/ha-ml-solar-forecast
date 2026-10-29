@@ -8,13 +8,14 @@ This module provides a base class for data stores that handle:
 """
 
 import abc
-import asyncio
 from datetime import UTC, datetime
 import logging
 from pathlib import Path
 from typing import Self
 
 import pandas as pd
+
+from homeassistant.core import HomeAssistant
 
 log = logging.getLogger(__name__)
 
@@ -23,6 +24,7 @@ class DataStore:
     """Base class for caching data store with delta-fetching and serialization."""
 
     data: pd.DataFrame
+    hass: HomeAssistant
     storage_dir: str | None
     storage_fn_prefix: str | None
 
@@ -38,10 +40,12 @@ class DataStore:
 
     def __init__(
         self,
+        hass: HomeAssistant,
         storage_dir: str | None = None,
         storage_fn_prefix: str | None = None,
     ) -> None:
         """Initialize the data store with optional storage parameters."""
+        self.hass = hass
         self.data = pd.DataFrame()
         self.storage_dir = storage_dir
         self.storage_fn_prefix = storage_fn_prefix
@@ -193,7 +197,7 @@ class DataStore:
             self.last_updated = datetime.now(UTC)
         return changed
 
-    def get_storage_file(self):
+    def _get_storage_file(self) -> str | None:
         if self.storage_dir is None or self.storage_fn_prefix is None:
             return None
         if not Path(self.storage_dir).exists():
@@ -201,16 +205,24 @@ class DataStore:
         return f"{self.storage_dir}/{self.storage_fn_prefix}.json.gz"
 
     async def serialize(self):
-        fn = self.get_storage_file()
+        fn = await self.hass.async_add_executor_job(self._get_storage_file)
         if fn is not None:
             log.info("storing new %s data", self.storage_fn_prefix)
-            await asyncio.to_thread(self.data.to_json, fn, compression="gzip")
+            await self.hass.async_add_executor_job(
+                lambda: self.data.to_json(fn, compression="gzip")
+            )
 
     async def load(self) -> Self:
-        fn = self.get_storage_file()
-        if fn is not None and Path(fn).exists():
+        def _read() -> tuple[pd.DataFrame | None, float | None]:
+            fn = self._get_storage_file()
+            if fn is not None and Path(fn).exists():
+                return pd.read_json(fn, compression="gzip"), Path(fn).stat().st_mtime
+            return None, None
+
+        result, mtime = await self.hass.async_add_executor_job(_read)
+        if result is not None:
             log.info("loading persisted %s data", self.storage_fn_prefix)
-            self.data = await asyncio.to_thread(pd.read_json, fn, compression="gzip")
+            self.data = result
 
             # Handle index type: to_json saves DatetimeIndex as epoch milliseconds,
             # which read_json loads as Int64Index. Convert back to DatetimeIndex.
@@ -227,5 +239,5 @@ class DataStore:
             self.data.index.set_names("time", inplace=True)
             self.data.dropna(inplace=True)
 
-            self.last_updated = datetime.fromtimestamp(Path(fn).stat().st_mtime, tz=UTC)
+            self.last_updated = datetime.fromtimestamp(mtime, tz=UTC)
         return self

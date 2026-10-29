@@ -11,7 +11,9 @@ For simple installations, there is no major benefit over classic forecasting sol
 
 ## 📌 Overview
 
-This integration leverages **LightGBM** to provide **solar power predictions** based on historical weather data, solar irradiance, and other environmental factors, as well as your own historic solar output, read directly from Home Assistant's statistics..
+This integration leverages **[hessboost](https://pypi.org/project/hessboost/)** — a fast, Rust-based gradient boosting library with an XGBoost-compatible API — to provide **solar power predictions** based on historical weather data, solar irradiance, and other environmental factors, as well as your own historic solar output, read directly from Home Assistant's statistics.
+
+Training and prediction run fully in-process inside Home Assistant; no external addon or service is required. hessboost ships prebuilt musllinux wheels, so it works on Alpine-based Home Assistant installations (where LightGBM, for example, cannot be installed because it only provides glibc wheels).
 
 ⚠️ **Early Alpha / Proof of Concept** – This integration is in active development and may contain bugs or limitations. Use at your own risk! It is probably best to not use it yet.
 
@@ -19,16 +21,14 @@ This integration leverages **LightGBM** to provide **solar power predictions** b
 
 ## 🔧 Requirements
 
-### **1. Home Assistant Machine Learner Addon**
-This integration requires the **[HA Machine Learner Addon](https://github.com/b3nn0/hassio-addon-machinelearner)** to run the forecasting models.
-Once [this](https://github.com/home-assistant/wheels-custom-integrations/pull/748) pull request is merged, the addon will become obsolete eventually.
+- Home Assistant (works on Alpine/musl-based installations such as HA Container)
+- Python dependencies (`hessboost`, `pandas`) are installed automatically by Home Assistant when the integration is set up.
 
 
 
 ## 🛠️ Installation
 
-### **1. Manual Installation (HACS)**
-1. Install the HA Machine learner app from [here](https://github.com/b3nn0/hassio-addon-machinelearner).
+### **1. Manual Installation**
 1. **Clone this repository** into your `custom_components` folder:
    ```bash
    cd /config/custom_components
@@ -38,8 +38,7 @@ Once [this](https://github.com/home-assistant/wheels-custom-integrations/pull/74
 1. **Configure the integration** via **Settings > Devices & Services > Add Integration**.
 
 ### **2. HACS (Recommended)**
-1. Install the HA Machine learner app from [here](https://github.com/b3nn0/hassio-addon-machinelearner).
-1. Add this repository as a cusom repository to HACS
+1. Add this repository as a custom repository to HACS
 1. Search for **"ML Solar Forecast"** in HACS.
 1. Install and restart Home Assistant.
 
@@ -58,7 +57,6 @@ Once [this](https://github.com/home-assistant/wheels-custom-integrations/pull/74
 
 
 ## TODO
-- Get LightGBM approved to HA wheels and change integration to use that instead ([#748](https://github.com/home-assistant/wheels-custom-integrations/pull/748))
 - Add helpful sensors and service to get current forecast
 
 
@@ -77,4 +75,3 @@ This project was inspired by the excellent work of **[OpenMeteoSolarForecast](ht
 
 ## 📜 License
 This project is licensed under **MIT**.
-

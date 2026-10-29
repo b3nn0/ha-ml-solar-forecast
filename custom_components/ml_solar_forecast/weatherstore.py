@@ -15,6 +15,8 @@ from typing import override
 import aiohttp
 import pandas as pd
 
+from homeassistant.core import HomeAssistant
+
 from .const import log
 from .datastore import DataStore
 
@@ -29,6 +31,7 @@ class WeatherStore(DataStore):
 
     def __init__(
         self,
+        hass: HomeAssistant,
         key: str,
         lat: float,
         lon: float,
@@ -39,6 +42,7 @@ class WeatherStore(DataStore):
         """Initialize the WeatherStore with location and storage settings.
 
         Args:
+            hass: The Home Assistant instance.
             key: Unique identifier for the weather store.
             lat: Latitude of the location.
             lon: Longitude of the location.
@@ -46,7 +50,7 @@ class WeatherStore(DataStore):
             openmeteo_api_key: Optional OpenMeteo API key for authenticated requests.
             openmeteo_weather_models: Optional comma-separated string of OpenMeteo weather model codes (e.g., "en_DE,fr_FR").
         """
-        super().__init__(storage_dir, f"weather_{key}_v1")
+        super().__init__(hass, storage_dir, f"weather_{key}_v1")
         self.key = key
         self.lat = lat
         self.lon = lon

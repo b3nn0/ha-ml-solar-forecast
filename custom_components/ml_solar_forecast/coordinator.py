@@ -2,7 +2,7 @@
 
 This module provides the MLSolarForecastCoordinator class, which handles:
 - Data fetching and updating for solar power forecasting
-- Model training and prediction using LightGBM
+- Model training and prediction using a gradient boosting model (hessboost)
 - Weather data collection and processing
 - Integration with Home Assistant's recorder for historical data
 """
@@ -20,6 +20,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import recorder
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
+from .booster import Booster
 from .const import (
     CONF_LOCATION,
     CONF_MAX_INVERTER_POWER_W,
@@ -30,7 +31,6 @@ from .const import (
     DOMAIN,
     log,
 )
-from .lgbm import LGBM
 from .weatherstore import WeatherStore
 
 
@@ -54,6 +54,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         self.lon: float = config.data[CONF_LOCATION]["longitude"]
 
         self.weatherstore = WeatherStore(
+            self.hass,
             self.key,
             self.lat,
             self.lon,
@@ -61,7 +62,11 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             config.data.get(CONF_OPENMETEO_API_KEY),
             config.data.get(CONF_OPENMETEO_WEATHER_MODELS),
         )
-        self.lgbm = LGBM(f"ml-solar-forecast-{config.data[CONF_PRODUCTION_ENTITY]}")
+        self.booster = Booster(
+            self.hass,
+            f"ml-solar-forecast-{config.data[CONF_PRODUCTION_ENTITY]}",
+            hass.config.path("ml-solar-forecast"),
+        )
         # force retrain initially
         self.last_train_time: datetime = datetime.now(UTC) - timedelta(days=1)
 
@@ -88,7 +93,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
 
             # Retrain nightly
             if (
-                not await self.lgbm.is_trained()
+                not await self.booster.is_trained()
                 or self.last_train_time.date() != datetime.now(UTC).date()
             ):
                 await self.retrain_model()
@@ -104,7 +109,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             data = await self._prepare_dataframe(fcstart, end, False)
 
             log.debug(f"{self.key}: computing forecast...")
-            forecast = await self.lgbm.predict(data, "power")
+            forecast = await self.booster.predict(data)
             # re-join original data so we have elevation levels to launder data
             forecast = pd.concat([data, forecast], axis=1)
             forecast = self.data_laundry(forecast)
@@ -115,7 +120,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         return self.curr_forecast
 
     async def retrain_model(self):
-        """Retrain the LightGBM model with historical data.
+        """Retrain the gradient boosting model with historical data.
 
         This method collects historical solar production data and retrains the model
         to improve future predictions. It is called nightly to incorporate new data.
@@ -131,7 +136,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         data = data.dropna()
 
         log.debug(f"{self.key}: training model...")
-        await self.lgbm.train(data, "power")
+        await self.booster.train(data)
         log.debug(f"{self.key}: model retrain done.")
         self.last_train_time = datetime.now(UTC)
 
@@ -142,10 +147,9 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         data = await self.weatherstore.get_data(start_time, end_time)
         data = data.copy()
 
-        observer = Observer(latitude=self.lat, longitude=self.lon)
-
-        data["azimuth"] = list(data.index.map(lambda t: sun.azimuth(observer, t)))
-        data["elevation"] = list(data.index.map(lambda t: sun.elevation(observer, t)))
+        # Computing sun positions for thousands of timestamps is CPU-bound
+        # (astral is pure Python), so keep it off the event loop.
+        data = await self.hass.async_add_executor_job(self._add_solar_positions, data)
 
         if with_power:
             power = await self._collect_solar_history(start_time, end_time)
@@ -153,6 +157,13 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             data = self.data_laundry(data)
 
         return data.dropna()
+
+    def _add_solar_positions(self, data: pd.DataFrame) -> pd.DataFrame:
+        """Add azimuth and elevation columns for each timestamp in the index."""
+        observer = Observer(latitude=self.lat, longitude=self.lon)
+        data["azimuth"] = list(data.index.map(lambda t: sun.azimuth(observer, t)))
+        data["elevation"] = list(data.index.map(lambda t: sun.elevation(observer, t)))
+        return data
 
     def data_laundry(self, df: pd.DataFrame):
         """Cleans up data to matchs some basic assumptions.
@@ -213,8 +224,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             # For now, learning only runs on hourly aggregates instead of 15 minute intervals.
             # Since for one hour, 1W=1Wh, we just interpret our learning data as "watts" instead of "watt-hours".
             # -> the model predicts watts, we just divide by 4 in the forecast if needed
-
-            df = await asyncio.to_thread(
+            df = await self.hass.async_add_executor_job(
                 lambda: df.shift(30, "min").resample("15min").interpolate("cubic")
             )
 
