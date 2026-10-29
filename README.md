@@ -36,10 +36,10 @@ This integration provides **solar power predictions** based on historical weathe
 1. **Configure the integration** via **Settings > Devices & Services > Add Integration**.
 
 ### **2. HACS (Recommended)**
+[![Open in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=b3nn0&repository=ha-ml-solar-forecast&category=integration)
 1. Add this repository as a custom repository to HACS
 1. Search for **"ML Solar Forecast"** in HACS.
 1. Install and restart Home Assistant.
-
 
 
 ## 📊 Configuration
