@@ -11,18 +11,16 @@ For simple installations, there is no major benefit over classic forecasting sol
 
 ## 📌 Overview
 
-This integration leverages **[hessboost](https://pypi.org/project/hessboost/)** — a fast, Rust-based gradient boosting library with an XGBoost-compatible API — to provide **solar power predictions** based on historical weather data, solar irradiance, and other environmental factors, as well as your own historic solar output, read directly from Home Assistant's statistics.
+This integration provides **solar power predictions** based on historical weather data, solar irradiance, and other environmental factors, as well as your own historic solar output, read directly from Home Assistant's statistics. Training and prediction run inside Home Assistant.
 
-Training and prediction run fully in-process inside Home Assistant; no external addon or service is required. hessboost ships prebuilt musllinux wheels, so it works on Alpine-based Home Assistant installations (where LightGBM, for example, cannot be installed because it only provides glibc wheels).
-
-⚠️ **Early Alpha / Proof of Concept** – This integration is in active development and may contain bugs or limitations. Use at your own risk! It is probably best to not use it yet.
+⚠️ **Early development** – This integration is still maturing and may contain bugs or limitations.
 
 
 
 ## 🔧 Requirements
 
-- Home Assistant (works on Alpine/musl-based installations such as HA Container)
-- Python dependencies (`hessboost`, `pandas`) are installed automatically by Home Assistant when the integration is set up.
+- Home Assistant
+- Python dependencies are installed automatically by Home Assistant when the integration is set up.
 
 
 
