@@ -8,16 +8,14 @@ This module provides the MLSolarForecastCoordinator class, which handles:
 """
 
 import asyncio
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 
 from astral import Observer, sun
 import numpy as np
 import pandas as pd
 
-from homeassistant.components.recorder.statistics import statistics_during_period
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers import recorder
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.util.dt import utcnow
 
@@ -32,6 +30,7 @@ from .const import (
     DOMAIN,
     log,
 )
+from .productionstore import ProductionStore
 from .weatherstore import WeatherStore
 
 
@@ -63,6 +62,12 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             config.data.get(CONF_OPENMETEO_API_KEY),
             config.data.get(CONF_OPENMETEO_WEATHER_MODELS),
         )
+        self.productionstore = ProductionStore(
+            self.hass,
+            self.key,
+            hass.config.path("ml-solar-forecast"),
+            f"production_{config.data[CONF_PRODUCTION_ENTITY]}_v1",
+        )
         self.booster = Booster(
             self.hass,
             f"ml-solar-forecast-{config.data[CONF_PRODUCTION_ENTITY]}",
@@ -91,6 +96,8 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         async with self.update_lock:
             if len(self.weatherstore.data) == 0:
                 await self.weatherstore.load()
+            if len(self.productionstore.data) == 0:
+                await self.productionstore.load()
 
             # Retrain nightly
             if (
@@ -153,7 +160,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         data = await self.hass.async_add_executor_job(self._add_solar_positions, data)
 
         if with_power:
-            power = await self._collect_solar_history(start_time, end_time)
+            power = await self.productionstore.get_data(start_time, end_time)
             data = pd.concat([data, power], axis=1)
             data = self.data_laundry(data)
 
@@ -184,50 +191,3 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             df.loc[df["elevation"] <= 0, "power"] = 0
 
         return df
-
-    async def _collect_solar_history(
-        self, start_time: datetime, end_time: datetime
-    ) -> pd.DataFrame:
-
-        log.debug(
-            f"{self.key} fetching production statistics {start_time} -> {end_time}"
-        )
-        entity_id = self.config.data[CONF_PRODUCTION_ENTITY]
-
-        statistic_id = {entity_id}
-        types = {"sum"}
-        units = {"energy": "Wh"}
-
-        recorder_instance = recorder.get_instance(self.hass)
-
-        df = pd.DataFrame()
-
-        if end_time > start_time:
-            # Fetch remaining required time from hourly data and spline it
-            stats = await recorder_instance.async_add_executor_job(
-                statistics_during_period,
-                self.hass,
-                start_time,
-                end_time,
-                statistic_id,
-                "hour",
-                units,
-                types,
-            )
-            df = pd.DataFrame()
-            df["time"] = [
-                pd.Timestamp(r["start"], tz=UTC, unit="s") for r in stats[entity_id]
-            ]
-            df["power"] = [r["sum"] for r in stats[entity_id]]
-            df = df.set_index("time")
-            df["power"] = df["power"].diff()
-
-            # For now, learning only runs on hourly aggregates instead of 15 minute intervals.
-            # Since for one hour, 1W=1Wh, we just interpret our learning data as "watts" instead of "watt-hours".
-            # -> the model predicts watts, we just divide by 4 in the forecast if needed
-            df = await self.hass.async_add_executor_job(
-                lambda: df.shift(30, "min").resample("15min").interpolate("cubic")
-            )
-
-        df["power"] = df["power"].clip(lower=0).apply(lambda p: 0 if p < 15 else p)
-        return df.dropna()
