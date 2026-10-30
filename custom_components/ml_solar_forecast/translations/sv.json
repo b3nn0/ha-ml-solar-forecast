@@ -1,70 +1,83 @@
 {
-    "title": "Maskininlärning för solprognos",
-    "config": {
-        "step": {
-            "user": {
-                "title": "Maskininlärning för solprognos",
-                "data": {
-                    "location": "Plats för solanläggningen",
-                    "production_entity": "Entitet för solproduktion",
-                    "training_days": "Träningsdagar",
-                    "max_inverter_power_w": "Max växelriktareffekt (watt)",
-                    "openmeteo_api_key": "OpenMeteo API-nyckel (valfritt)",
-                    "openmeteo_weather_models": "Vädermodeller (valfritt)"
-                },
-                "data_description": {
-                    "training_days": "Ju längre, desto bättre. Från 30 dagar och uppåt får du användbara resultat. Över 180 dagar är förbättringarna små, över 365 dagar mer eller mindre obefintliga. Om du gör större ändringar av solanläggningen, håll detta kort nog för att inte blanda träningsdata.",
-                    "max_inverter_power_w": "Används för att begränsa prognosvärden och filtrera ogiltig träningsdata.",
-                    "openmeteo_weather_models": "Standard är best_match."
-                }
-            },
-            "reconfigure": {
-                "title": "Maskininlärning för solprognos",
-                "data": {
-                    "location": "Plats för solanläggningen",
-                    "production_entity": "Entitet för solproduktion",
-                    "training_days": "Träningsdagar",
-                    "max_inverter_power_w": "Max växelriktareffekt (watt)",
-                    "openmeteo_api_key": "OpenMeteo API-nyckel (valfritt)",
-                    "openmeteo_weather_models": "Vädermodeller (valfritt)"
-                },
-                "data_description": {
-                    "training_days": "Ju längre, desto bättre. Från 30 dagar och uppåt får du användbara resultat. Över 180 dagar är förbättringarna små, över 365 dagar mer eller mindre obefintliga. Om du gör större ändringar av solanläggningen, håll detta kort nog för att inte blanda träningsdata.",
-                    "max_inverter_power_w": "Används för att begränsa prognosvärden och filtrera ogiltig träningsdata.",
-                    "openmeteo_weather_models": "Standard är best_match."
-                }
-            }
+  "title": "Maskininlärning för solprognos",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Maskininlärning för solprognos",
+        "data": {
+          "location": "Plats för solanläggningen",
+          "production_entity": "Entitet för solproduktion",
+          "training_days": "Träningsdagar",
+          "max_inverter_power_w": "Max växelriktareffekt (watt)",
+          "openmeteo_api_key": "OpenMeteo API-nyckel (valfritt)",
+          "openmeteo_weather_models": "Vädermodeller (valfritt)"
+        },
+        "data_description": {
+          "training_days": "Ju längre, desto bättre. Från 30 dagar och uppåt får du användbara resultat. Över 180 dagar är förbättringarna små, över 365 dagar mer eller mindre obefintliga. Om du gör större ändringar av solanläggningen, håll detta kort nog för att inte blanda träningsdata.",
+          "max_inverter_power_w": "Används för att begränsa prognosvärden och filtrera ogiltig träningsdata.",
+          "openmeteo_weather_models": "Standard är best_match."
         }
-    },
-    "entity": {
-        "sensor": {
-            "energy_current_hour": {
-                "name": "Uppskattad energiproduktion - denna timme"
-            },
-            "energy_next_hour": {
-                "name": "Uppskattad energiproduktion - nästa timme"
-            },
-            "energy_production_today": {
-                "name": "Uppskattad energiproduktion - idag"
-            },
-            "energy_production_today_remaining": {
-                "name": "Uppskattad energiproduktion - återstående idag"
-            },
-            "energy_production_tomorrow": {
-                "name": "Uppskattad energiproduktion - imorgon"
-            },
-            "power_highest_peak_time_today": {
-                "name": "Tidpunkt för högsta effekt - idag"
-            },
-            "power_highest_peak_time_tomorrow": {
-                "name": "Tidpunkt för högsta effekt - imorgon"
-            },
-            "power_production_now": {
-                "name": "Uppskattad produktionseffekt - nu"
-            },
-            "forecast_raw_data": {
-                "name": "Rådata för prognos"
-            }
+      },
+      "reconfigure": {
+        "title": "Maskininlärning för solprognos",
+        "data": {
+          "location": "Plats för solanläggningen",
+          "production_entity": "Entitet för solproduktion",
+          "training_days": "Träningsdagar",
+          "max_inverter_power_w": "Max växelriktareffekt (watt)",
+          "openmeteo_api_key": "OpenMeteo API-nyckel (valfritt)",
+          "openmeteo_weather_models": "Vädermodeller (valfritt)"
+        },
+        "data_description": {
+          "training_days": "Ju längre, desto bättre. Från 30 dagar och uppåt får du användbara resultat. Över 180 dagar är förbättringarna små, över 365 dagar mer eller mindre obefintliga. Om du gör större ändringar av solanläggningen, håll detta kort nog för att inte blanda träningsdata.",
+          "max_inverter_power_w": "Används för att begränsa prognosvärden och filtrera ogiltig träningsdata.",
+          "openmeteo_weather_models": "Standard är best_match."
         }
+      }
     }
+  },
+  "entity": {
+    "sensor": {
+      "energy_current_hour": {
+        "name": "Uppskattad energiproduktion - denna timme"
+      },
+      "energy_next_hour": {
+        "name": "Uppskattad energiproduktion - nästa timme"
+      },
+      "energy_production_today": {
+        "name": "Uppskattad energiproduktion - idag"
+      },
+      "energy_production_today_remaining": {
+        "name": "Uppskattad energiproduktion - återstående idag"
+      },
+      "energy_production_tomorrow": {
+        "name": "Uppskattad energiproduktion - imorgon"
+      },
+      "power_highest_peak_time_today": {
+        "name": "Tidpunkt för högsta effekt - idag"
+      },
+      "power_highest_peak_time_tomorrow": {
+        "name": "Tidpunkt för högsta effekt - imorgon"
+      },
+      "power_production_now": {
+        "name": "Uppskattad produktionseffekt - nu"
+      },
+      "forecast_raw_data": {
+        "name": "Rådata för prognos"
+      }
+    }
+  },
+  "exceptions": {
+    "end_before_start": {
+      "message": "Sluttiden måste vara efter starttiden."
+    }
+  },
+  "selector": {
+    "forecast_resolution": {
+      "options": {
+        "raw": "Naturlig (15 minuter)",
+        "hourly": "Aggregerat till hela timmar"
+      }
+    }
+  }
 }

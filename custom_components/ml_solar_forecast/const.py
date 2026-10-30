@@ -14,8 +14,10 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 SERVICE_NAME_GET_FORECAST = "get_forecast"
 
+SERVICE_DATA_CONFIG_ENTRY = "config_entry"
 SERVICE_DATA_START = "start"
 SERVICE_DATA_END = "end"
+SERVICE_DATA_RESOLUTION = "resolution"
 
 CONF_LOCATION = "location"
 CONF_PRODUCTION_ENTITY = "production_entity"

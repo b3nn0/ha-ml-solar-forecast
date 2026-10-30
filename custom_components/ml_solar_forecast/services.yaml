@@ -1,24 +1,45 @@
 get_forecast:
   name: Get Solar Forecast
-  description: Get current solar forecast
+  description: >-
+    Get the current solar forecast as two time series: instantaneous power in
+    watts, and energy in watt-hours per 15 minute period. Timestamps are in the
+    Home Assistant timezone.
 
   fields:
-    entry_id:
-      description: Config entry to get forecast from. Go to Settings->Integrations->Machine Learning Solar Forecast -> 3-dots-menu -> Copy ID to find it
+    config_entry:
+      name: Config entry
+      description: Config entry to get the forecast from.
       required: true
       selector:
-        text:
+        config_entry:
+          integration: ml_solar_forecast
 
     start:
-      description: Start timestamp
-      example: "2026-03-01T00:00:00Z"
+      name: Start
+      description: Start timestamp (defaults to today at 00:00, local time).
       required: false
+      example: "2026-03-01T00:00:00"
       selector:
         datetime: {}
 
     end:
-      description: End timestamp
-      example: "2026-03-15T00:00:00Z"
+      name: End
+      description: End timestamp (defaults to 14 days after start).
       required: false
+      example: "2026-03-15T00:00:00"
       selector:
         datetime: {}
+
+    resolution:
+      name: Resolution
+      description: >-
+        Resolution of the returned series. 'Raw' uses the native 15 minute
+        resolution. 'Hourly' aggregates to whole-hour buckets.
+      required: false
+      default: raw
+      selector:
+        select:
+          options:
+            - raw
+            - hourly
+          translation_key: forecast_resolution
