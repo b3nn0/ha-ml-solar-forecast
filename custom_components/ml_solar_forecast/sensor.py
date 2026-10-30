@@ -19,6 +19,7 @@ from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util.dt import utcnow
 
 from .const import DOMAIN
 from .coordinator import MLSolarForecastCoordinator
@@ -53,14 +54,14 @@ class MLForecast:
     @property
     def energy_today(self) -> float | None:
         """Return the predicted energy of today in Wh."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         return self._energy_hours(start, start + timedelta(days=1))
 
     @property
     def energy_today_remaining(self) -> float | None:
         """Return the predicted energy remaining for today in Wh."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
         start += timedelta(minutes=15)
         end = (now + timedelta(days=1)).replace(
@@ -73,7 +74,7 @@ class MLForecast:
     @property
     def energy_tomorrow(self) -> float | None:
         """Return the predicted energy of tomorrow in Wh."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = (now + timedelta(days=1)).replace(
             hour=0, minute=0, second=0, microsecond=0
         )
@@ -82,7 +83,7 @@ class MLForecast:
     @property
     def power_now(self) -> float | None:
         """Return the predicted power for the current 15 minute slot in W."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = now.replace(minute=now.minute // 15 * 15, second=0, microsecond=0)
         series = self._power.loc[start : start + timedelta(minutes=15)]
         if series.empty:
@@ -98,24 +99,24 @@ class MLForecast:
     @property
     def power_highest_peak_time_today(self) -> datetime | None:
         """Return the timestamp of the highest power peak today."""
-        return self._highest_peak_time(datetime.now(UTC))
+        return self._highest_peak_time(utcnow())
 
     @property
     def power_highest_peak_time_tomorrow(self) -> datetime | None:
         """Return the timestamp of the highest power peak tomorrow."""
-        return self._highest_peak_time(datetime.now(UTC) + timedelta(days=1))
+        return self._highest_peak_time(utcnow() + timedelta(days=1))
 
     @property
     def energy_current_hour(self) -> float | None:
         """Return the predicted energy of the current hour in Wh."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = now.replace(minute=0, second=0, microsecond=0)
         return self._energy_hours(start, start + timedelta(hours=1))
 
     @property
     def energy_next_hour(self) -> float | None:
         """Return the predicted energy of the next full hour in Wh."""
-        now = datetime.now(UTC)
+        now = utcnow()
         start = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
         return self._energy_hours(start, start + timedelta(hours=1))
 
@@ -297,7 +298,7 @@ class MLSolarForecastRawSensorEntity(
         """Return the raw forecast power (W) per 15 minute slot, from today on."""
         if self.coordinator.data is None:
             return {}
-        today = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+        today = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         return {
             ts.isoformat(): float(power)
             for ts, power in self.coordinator.data["power"].loc[today:].items()

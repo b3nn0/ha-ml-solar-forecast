@@ -16,6 +16,7 @@ from typing import Self
 import pandas as pd
 
 from homeassistant.core import HomeAssistant
+from homeassistant.util.dt import utcnow
 
 log = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class DataStore:
 
         if self.known_source_horizon and (
             self.source_horizon_revalitation_ts is None
-            or datetime.now(UTC) < self.source_horizon_revalitation_ts
+            or utcnow() < self.source_horizon_revalitation_ts
         ):
             start = min(start, self.known_source_horizon)
             end = min(end, self.known_source_horizon)
@@ -131,7 +132,7 @@ class DataStore:
         """Check if the source horizon needs revalidation."""
         return (
             self.source_horizon_revalitation_ts is not None
-            and datetime.now(UTC) > self.source_horizon_revalitation_ts
+            and utcnow() > self.source_horizon_revalitation_ts
         )
 
     @abc.abstractmethod
@@ -194,7 +195,7 @@ class DataStore:
 
         changed = not olddata.round(decimals=10).equals(self.data.round(decimals=10))
         if changed:
-            self.last_updated = datetime.now(UTC)
+            self.last_updated = utcnow()
         return changed
 
     def _get_storage_file(self) -> str | None:

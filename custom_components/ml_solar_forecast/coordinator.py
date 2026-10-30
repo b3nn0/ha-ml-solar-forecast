@@ -19,6 +19,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import recorder
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.util.dt import utcnow
 
 from .booster import Booster
 from .const import (
@@ -68,7 +69,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             hass.config.path("ml-solar-forecast"),
         )
         # force retrain initially
-        self.last_train_time: datetime = datetime.now(UTC) - timedelta(days=1)
+        self.last_train_time: datetime = utcnow() - timedelta(days=1)
 
         self.curr_forecast: pd.DataFrame | None = None
         self.update_lock = asyncio.Lock()
@@ -94,12 +95,12 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
             # Retrain nightly
             if (
                 not await self.booster.is_trained()
-                or self.last_train_time.date() != datetime.now(UTC).date()
+                or self.last_train_time.date() != utcnow().date()
             ):
                 await self.retrain_model()
 
             # for actual forecasting, start from beginning of today
-            today = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+            today = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
             end = today + timedelta(days=14)
             fcstart = today - timedelta(days=60)
 
@@ -125,7 +126,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         This method collects historical solar production data and retrains the model
         to improve future predictions. It is called nightly to incorporate new data.
         """
-        end_time = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+        end_time = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         start_time = end_time - timedelta(days=self.config.data[CONF_TRAINING_DAYS])
 
         log.info(
@@ -138,7 +139,7 @@ class MLSolarForecastCoordinator(DataUpdateCoordinator):
         log.debug(f"{self.key}: training model...")
         await self.booster.train(data)
         log.debug(f"{self.key}: model retrain done.")
-        self.last_train_time = datetime.now(UTC)
+        self.last_train_time = utcnow()
 
     async def _prepare_dataframe(
         self, start_time: datetime, end_time: datetime, with_power: bool

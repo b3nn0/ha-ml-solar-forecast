@@ -16,6 +16,7 @@ import aiohttp
 import pandas as pd
 
 from homeassistant.core import HomeAssistant
+from homeassistant.util.dt import utcnow
 
 from .const import log
 from .datastore import DataStore
@@ -172,5 +173,5 @@ class WeatherStore(DataStore):
         If query is older than a few weeks, we need OpenMeteo's historical data API.
         We switch to historical API at 1 day to be safe.
         """
-        cutoff = datetime.now(UTC) - timedelta(days=1, minutes=1)
+        cutoff = utcnow() - timedelta(days=1, minutes=1)
         return dt < cutoff

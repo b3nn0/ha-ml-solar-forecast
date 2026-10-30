@@ -1,6 +1,6 @@
 """The HA-ML Solar Forecast integration."""
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, timedelta
 
 import voluptuous as vol
 
@@ -9,6 +9,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.util.dt import utcnow
 
 from .const import (
     DOMAIN,
@@ -43,9 +44,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         start = call.data.get(SERVICE_DATA_START)
         end = call.data.get(SERVICE_DATA_END)
         if not start:
-            start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            start = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         if not end:
-            end = datetime.now().replace(
+            end = utcnow().replace(
                 hour=0, minute=0, second=0, microsecond=0
             ) + timedelta(days=14)
         start = start.astimezone(UTC)
