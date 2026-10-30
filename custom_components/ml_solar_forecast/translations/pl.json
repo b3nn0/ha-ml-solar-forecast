@@ -17,6 +17,22 @@
                     "max_inverter_power_w": "Służy do przycinania wyników prognoz i filtrowania nieprawidłowych danych treningowych.",
                     "openmeteo_weather_models": "Domyślnie best_match."
                 }
+            },
+            "reconfigure": {
+                "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+                "data": {
+                    "location": "Lokalizacja instalacji fotowoltaicznej",
+                    "production_entity": "Encja produkcji energii słonecznej",
+                    "training_days": "Dni treningowe",
+                    "max_inverter_power_w": "Maks. moc falownika (waty)",
+                    "openmeteo_api_key": "Klucz API OpenMeteo (opcjonalnie)",
+                    "openmeteo_weather_models": "Modele pogodowe (opcjonalnie)"
+                },
+                "data_description": {
+                    "training_days": "Im dłużej, tym lepiej. Od 30 dni uzyskuje się użyteczne wyniki. Powyżej 180 dni poprawki są niewielkie, powyżej 365 dni praktycznie nieistniejące. W przypadku znaczących zmian w instalacji fotowoltaicznej ustaw tę wartość wystarczająco krótko, aby nie mieszać danych treningowych.",
+                    "max_inverter_power_w": "Służy do przycinania wyników prognoz i filtrowania nieprawidłowych danych treningowych.",
+                    "openmeteo_weather_models": "Domyślnie best_match."
+                }
             }
         }
     },

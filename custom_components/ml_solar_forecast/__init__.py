@@ -5,7 +5,6 @@ from datetime import UTC, timedelta
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
@@ -13,6 +12,7 @@ from homeassistant.util.dt import utcnow
 
 from .const import (
     DOMAIN,
+    PLATFORMS,
     SERVICE_DATA_END,
     SERVICE_DATA_START,
     SERVICE_NAME_GET_FORECAST,
@@ -72,7 +72,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entry.coordinator = coordinator
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
-    await hass.config_entries.async_forward_entry_setups(entry, [Platform.SENSOR])
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     entry.async_on_unload(entry.add_update_listener(async_update_options))
 
@@ -81,10 +81,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    # ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS) # ??
-    # if unload_ok:
-    #    hass.data[DOMAIN].pop(entry.entry_id)
-    return True
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id, None)
+    return unload_ok
 
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:

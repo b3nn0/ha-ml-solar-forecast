@@ -17,6 +17,22 @@
                     "max_inverter_power_w": "Se utiliza para recortar la salida de las predicciones y filtrar datos de entrenamiento no válidos.",
                     "openmeteo_weather_models": "Por defecto best_match."
                 }
+            },
+            "reconfigure": {
+                "title": "Previsión solar con aprendizaje automático",
+                "data": {
+                    "location": "Ubicación de la instalación solar",
+                    "production_entity": "Entidad de producción solar",
+                    "training_days": "Días de entrenamiento",
+                    "max_inverter_power_w": "Potencia máx. del inversor (vatios)",
+                    "openmeteo_api_key": "Clave API de OpenMeteo (opcional)",
+                    "openmeteo_weather_models": "Modelos meteorológicos (opcional)"
+                },
+                "data_description": {
+                    "training_days": "Cuanto más largo, mejor. A partir de 30 días se obtienen resultados útiles. Por encima de 180 días, las mejoras son menores; por encima de 365 días, más o menos inexistentes. Si realizas cambios significativos en tu instalación solar, mantén este valor lo suficientemente corto para no mezclar datos de entrenamiento.",
+                    "max_inverter_power_w": "Se utiliza para recortar la salida de las predicciones y filtrar datos de entrenamiento no válidos.",
+                    "openmeteo_weather_models": "Por defecto best_match."
+                }
             }
         }
     },

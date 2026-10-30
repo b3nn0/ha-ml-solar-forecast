@@ -17,6 +17,22 @@
                     "max_inverter_power_w": "Wird verwendet, um Vorhersagewerte zu begrenzen und ungültige Trainingsdaten zu filtern.",
                     "openmeteo_weather_models": "Standardmäßig best_match."
                 }
+            },
+            "reconfigure": {
+                "title": "Maschinelle Solarprognose",
+                "data": {
+                    "location": "Standort der Solaranlage",
+                    "production_entity": "Solarproduktions-Entität",
+                    "training_days": "Trainings-Tage",
+                    "max_inverter_power_w": "Max. Wechselrichterleistung (Watt)",
+                    "openmeteo_api_key": "OpenMeteo-API-Key (Optional)",
+                    "openmeteo_weather_models": "Wettermodelle (Optional)"
+                },
+                "data_description": {
+                    "training_days": "Je länger, desto besser. Ab 30 Tagen erhält man verwertbare Ergebnisse. Über 180 Tagen sind die Verbesserungen gering, über 365 Tagen mehr oder weniger nicht vorhanden. Bei erheblichen Änderungen an der Solaranlage sollte dieser Wert kurz genug gehalten werden, um die Trainingsdaten nicht zu vermischen.",
+                    "max_inverter_power_w": "Wird verwendet, um Vorhersagewerte zu begrenzen und ungültige Trainingsdaten zu filtern.",
+                    "openmeteo_weather_models": "Standardmäßig best_match."
+                }
             }
         }
     },

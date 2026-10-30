@@ -2,11 +2,15 @@
 
 import logging
 
+from homeassistant.const import Platform
+
 # Constants for the integration
 DOMAIN = "ml_solar_forecast"
 NAME = "Machine Learning Solar Forecast"
 VERSION = "0.0.0.dev0"
 
+
+PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 SERVICE_NAME_GET_FORECAST = "get_forecast"
 

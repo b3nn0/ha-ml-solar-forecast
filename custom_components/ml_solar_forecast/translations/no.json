@@ -17,6 +17,22 @@
                     "max_inverter_power_w": "Brukes til å begrense prognoseresultater og filtrere ugyldige treningsdata.",
                     "openmeteo_weather_models": "Standard er best_match."
                 }
+            },
+            "reconfigure": {
+                "title": "Maskinlæringsbasert solprognose",
+                "data": {
+                    "location": "Plassering av solanlegget",
+                    "production_entity": "Enhet for solproduksjon",
+                    "training_days": "Treningsdager",
+                    "max_inverter_power_w": "Maks. vekselrettere effekt (watt)",
+                    "openmeteo_api_key": "OpenMeteo API-nøkkel (valgfritt)",
+                    "openmeteo_weather_models": "Værmodeller (valgfritt)"
+                },
+                "data_description": {
+                    "training_days": "Jo lengre, jo bedre. Fra 30 dager og oppover får du brukbare resultater. Over 180 dager er forbedringene små, over 365 dager mer eller mindre ikke-eksisterende. Hvis du gjør betydelige endringer på solanlegget, hold denne verdien kort nok til ikke å blande treningsdata.",
+                    "max_inverter_power_w": "Brukes til å begrense prognoseresultater og filtrere ugyldige treningsdata.",
+                    "openmeteo_weather_models": "Standard er best_match."
+                }
             }
         }
     },
