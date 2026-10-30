@@ -1,9 +1,9 @@
 {
-  "title": "Previsione solare con apprendimento automatico",
+  "title": "Machine Learning Solar Forecast",
   "config": {
     "step": {
       "user": {
-        "title": "Previsione solare con apprendimento automatico",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Posizione dell'impianto solare",
           "production_entity": "Entità di produzione solare",
@@ -19,7 +19,7 @@
         }
       },
       "reconfigure": {
-        "title": "Previsione solare con apprendimento automatico",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Posizione dell'impianto solare",
           "production_entity": "Entità di produzione solare",

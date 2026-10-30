@@ -1,9 +1,9 @@
 {
-  "title": "Maskinlæringsbasert solprognose",
+  "title": "Machine Learning Solar Forecast",
   "config": {
     "step": {
       "user": {
-        "title": "Maskinlæringsbasert solprognose",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Plassering av solanlegget",
           "production_entity": "Enhet for solproduksjon",
@@ -19,7 +19,7 @@
         }
       },
       "reconfigure": {
-        "title": "Maskinlæringsbasert solprognose",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Plassering av solanlegget",
           "production_entity": "Enhet for solproduksjon",

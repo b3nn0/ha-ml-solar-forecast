@@ -1,9 +1,9 @@
 {
-  "title": "Machine Learning Zonne-voorspelling",
+  "title": "Machine Learning Solar Forecast",
   "config": {
     "step": {
       "user": {
-        "title": "Machine Learning Zonne-voorspelling",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Locatie van de zonne-installatie",
           "production_entity": "Entiteit voor zonne-productie",
@@ -19,7 +19,7 @@
         }
       },
       "reconfigure": {
-        "title": "Machine Learning Zonne-voorspelling",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Locatie van de zonne-installatie",
           "production_entity": "Entiteit voor zonne-productie",

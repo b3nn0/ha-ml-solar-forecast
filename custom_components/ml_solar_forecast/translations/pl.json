@@ -1,9 +1,9 @@
 {
-  "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+  "title": "Machine Learning Solar Forecast",
   "config": {
     "step": {
       "user": {
-        "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Lokalizacja instalacji fotowoltaicznej",
           "production_entity": "Encja produkcji energii słonecznej",
@@ -19,7 +19,7 @@
         }
       },
       "reconfigure": {
-        "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "Lokalizacja instalacji fotowoltaicznej",
           "production_entity": "Encja produkcji energii słonecznej",

@@ -1,9 +1,9 @@
 {
-  "title": "机器学习太阳能发电预测",
+  "title": "Machine Learning Solar Forecast",
   "config": {
     "step": {
       "user": {
-        "title": "机器学习太阳能发电预测",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "太阳能装置的位置",
           "production_entity": "太阳能发电量实体",
@@ -19,7 +19,7 @@
         }
       },
       "reconfigure": {
-        "title": "机器学习太阳能发电预测",
+        "title": "Machine Learning Solar Forecast",
         "data": {
           "location": "太阳能装置的位置",
           "production_entity": "太阳能发电量实体",
