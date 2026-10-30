@@ -1,0 +1,54 @@
+{
+    "title": "机器学习太阳能发电预测",
+    "config": {
+        "step": {
+            "user": {
+                "title": "机器学习太阳能发电预测",
+                "data": {
+                    "location": "太阳能装置的位置",
+                    "production_entity": "太阳能发电量实体",
+                    "training_days": "训练天数",
+                    "max_inverter_power_w": "最大逆变器功率（瓦特）",
+                    "openmeteo_api_key": "OpenMeteo API 密钥（可选）",
+                    "openmeteo_weather_models": "天气模型（可选）"
+                },
+                "data_description": {
+                    "training_days": "时间越长越好。从 30 天开始即可获得可用的结果。超过 180 天后，改进很小；超过 365 天后几乎不存在。如果对太阳能装置进行了重大更改，请将该值设置得足够短，以免混淆训练数据。",
+                    "max_inverter_power_w": "用于限制预测输出并过滤无效的训练数据。",
+                    "openmeteo_weather_models": "默认为 best_match。"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "energy_current_hour": {
+                "name": "预估发电量 - 本小时"
+            },
+            "energy_next_hour": {
+                "name": "预估发电量 - 下小时"
+            },
+            "energy_production_today": {
+                "name": "预估发电量 - 今天"
+            },
+            "energy_production_today_remaining": {
+                "name": "预估发电量 - 今天剩余"
+            },
+            "energy_production_tomorrow": {
+                "name": "预估发电量 - 明天"
+            },
+            "power_highest_peak_time_today": {
+                "name": "最高功率峰值时间 - 今天"
+            },
+            "power_highest_peak_time_tomorrow": {
+                "name": "最高功率峰值时间 - 明天"
+            },
+            "power_production_now": {
+                "name": "预估功率 - 当前"
+            },
+            "forecast_raw_data": {
+                "name": "预测原始数据"
+            }
+        }
+    }
+}

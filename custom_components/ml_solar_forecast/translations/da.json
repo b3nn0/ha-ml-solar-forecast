@@ -1,0 +1,54 @@
+{
+    "title": "Maskinlæringsbaseret solprognose",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Maskinlæringsbaseret solprognose",
+                "data": {
+                    "location": "Placering af solanlægget",
+                    "production_entity": "Entitet for solproduktion",
+                    "training_days": "Træningsdage",
+                    "max_inverter_power_w": "Maks. vekselrettereffekt (watt)",
+                    "openmeteo_api_key": "OpenMeteo API-nøgle (valgfri)",
+                    "openmeteo_weather_models": "Vejrmodeller (valgfri)"
+                },
+                "data_description": {
+                    "training_days": "Jo længere, jo bedre. Fra 30 dage og op får du brugbare resultater. Over 180 dage er forbedringerne små, over 365 dage mere eller mindre ikke-eksisterende. Hvis du laver større ændringer af solanlægget, så hold denne værdi kort nok til ikke at blande træningsdata.",
+                    "max_inverter_power_w": "Bruges til at begrænse prognoseresultater og filtrere ugyldige træningsdata.",
+                    "openmeteo_weather_models": "Standard er best_match."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "energy_current_hour": {
+                "name": "Estimeret energiproduktion - denne time"
+            },
+            "energy_next_hour": {
+                "name": "Estimeret energiproduktion - næste time"
+            },
+            "energy_production_today": {
+                "name": "Estimeret energiproduktion - i dag"
+            },
+            "energy_production_today_remaining": {
+                "name": "Estimeret energiproduktion - resterende i dag"
+            },
+            "energy_production_tomorrow": {
+                "name": "Estimeret energiproduktion - i morgen"
+            },
+            "power_highest_peak_time_today": {
+                "name": "Tidspunkt for højeste effekt - i dag"
+            },
+            "power_highest_peak_time_tomorrow": {
+                "name": "Tidspunkt for højeste effekt - i morgen"
+            },
+            "power_production_now": {
+                "name": "Estimeret produktionseffekt - nu"
+            },
+            "forecast_raw_data": {
+                "name": "Rådata for prognose"
+            }
+        }
+    }
+}

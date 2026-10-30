@@ -1,0 +1,54 @@
+{
+    "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Prognoza fotowoltaiczna oparta na uczeniu maszynowym",
+                "data": {
+                    "location": "Lokalizacja instalacji fotowoltaicznej",
+                    "production_entity": "Encja produkcji energii słonecznej",
+                    "training_days": "Dni treningowe",
+                    "max_inverter_power_w": "Maks. moc falownika (waty)",
+                    "openmeteo_api_key": "Klucz API OpenMeteo (opcjonalnie)",
+                    "openmeteo_weather_models": "Modele pogodowe (opcjonalnie)"
+                },
+                "data_description": {
+                    "training_days": "Im dłużej, tym lepiej. Od 30 dni uzyskuje się użyteczne wyniki. Powyżej 180 dni poprawki są niewielkie, powyżej 365 dni praktycznie nieistniejące. W przypadku znaczących zmian w instalacji fotowoltaicznej ustaw tę wartość wystarczająco krótko, aby nie mieszać danych treningowych.",
+                    "max_inverter_power_w": "Służy do przycinania wyników prognoz i filtrowania nieprawidłowych danych treningowych.",
+                    "openmeteo_weather_models": "Domyślnie best_match."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "energy_current_hour": {
+                "name": "Szacowana produkcja energii - ta godzina"
+            },
+            "energy_next_hour": {
+                "name": "Szacowana produkcja energii - następna godzina"
+            },
+            "energy_production_today": {
+                "name": "Szacowana produkcja energii - dziś"
+            },
+            "energy_production_today_remaining": {
+                "name": "Szacowana produkcja energii - pozostała dziś"
+            },
+            "energy_production_tomorrow": {
+                "name": "Szacowana produkcja energii - jutro"
+            },
+            "power_highest_peak_time_today": {
+                "name": "Godzina najwyższego szczytu mocy - dziś"
+            },
+            "power_highest_peak_time_tomorrow": {
+                "name": "Godzina najwyższego szczytu mocy - jutro"
+            },
+            "power_production_now": {
+                "name": "Szacowana produkcja mocy - teraz"
+            },
+            "forecast_raw_data": {
+                "name": "Dane surowe prognozy"
+            }
+        }
+    }
+}

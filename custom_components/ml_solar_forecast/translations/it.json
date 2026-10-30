@@ -1,0 +1,54 @@
+{
+    "title": "Previsione solare con apprendimento automatico",
+    "config": {
+        "step": {
+            "user": {
+                "title": "Previsione solare con apprendimento automatico",
+                "data": {
+                    "location": "Posizione dell'impianto solare",
+                    "production_entity": "Entità di produzione solare",
+                    "training_days": "Giorni di addestramento",
+                    "max_inverter_power_w": "Potenza max. dell'inverter (Watt)",
+                    "openmeteo_api_key": "Chiave API OpenMeteo (facoltativo)",
+                    "openmeteo_weather_models": "Modelli meteo (facoltativo)"
+                },
+                "data_description": {
+                    "training_days": "Più lunghi sono, meglio è. A partire da 30 giorni si ottengono risultati utilizzabili. Oltre 180 giorni i miglioramenti sono minimi, oltre 365 giorni più o meno inesistenti. Se apporti modifiche significative all'impianto solare, mantieni questo valore abbastanza breve da non mescolare i dati di addestramento.",
+                    "max_inverter_power_w": "Utilizzato per limitare l'output delle previsioni e filtrare i dati di addestramento non validi.",
+                    "openmeteo_weather_models": "Predefinito best_match."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "energy_current_hour": {
+                "name": "Produzione di energia stimata - questa ora"
+            },
+            "energy_next_hour": {
+                "name": "Produzione di energia stimata - ora successiva"
+            },
+            "energy_production_today": {
+                "name": "Produzione di energia stimata - oggi"
+            },
+            "energy_production_today_remaining": {
+                "name": "Produzione di energia stimata - restante oggi"
+            },
+            "energy_production_tomorrow": {
+                "name": "Produzione di energia stimata - domani"
+            },
+            "power_highest_peak_time_today": {
+                "name": "Orario del picco di potenza più alto - oggi"
+            },
+            "power_highest_peak_time_tomorrow": {
+                "name": "Orario del picco di potenza più alto - domani"
+            },
+            "power_production_now": {
+                "name": "Produzione di potenza stimata - adesso"
+            },
+            "forecast_raw_data": {
+                "name": "Dati grezzi della previsione"
+            }
+        }
+    }
+}
